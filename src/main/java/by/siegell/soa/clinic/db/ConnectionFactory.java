@@ -22,7 +22,7 @@ public class ConnectionFactory {
         jdbcPassword = DbConstants.PASSWORD;
     }
 
-    private static Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(jdbcUrl,
                 jdbcUser,
                 jdbcPassword);
