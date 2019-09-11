@@ -1,6 +1,6 @@
 USE `clinic`;
 
-CREATE TABLE `Doctor`
+CREATE TABLE `doctor`
 (
     `id`             INT          NOT NULL AUTO_INCREMENT,
     `firstName`      varchar(50)  NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE `Doctor`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `DoctorSchedule`
+CREATE TABLE `doctor_schedule`
 (
     `id`                  INT       NOT NULL AUTO_INCREMENT,
     `createdAt`           TIMESTAMP NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE `DoctorSchedule`
     PRIMARY KEY (`id`)
 );
 
-CREATE TABLE `Appointment`
+CREATE TABLE `appointment`
 (
     `id`               INT         NOT NULL AUTO_INCREMENT,
     `createdAt`        TIMESTAMP   NOT NULL,
@@ -41,8 +41,8 @@ CREATE TABLE `Appointment`
     PRIMARY KEY (`id`)
 );
 
-ALTER TABLE `DoctorSchedule`
-    ADD CONSTRAINT `DoctorSchedule_fk0` FOREIGN KEY (`doctorId`) REFERENCES `Doctor` (`id`);
+ALTER TABLE `doctor_schedule`
+    ADD CONSTRAINT `doctorSchedule_fk0` FOREIGN KEY (`doctorId`) REFERENCES `doctor` (`id`);
 
-ALTER TABLE `Appointment`
-    ADD CONSTRAINT `Appointment_fk0` FOREIGN KEY (`doctorScheduleId`) REFERENCES `DoctorSchedule` (`id`);
+ALTER TABLE `appointment`
+    ADD CONSTRAINT `appointment_fk0` FOREIGN KEY (`doctorScheduleId`) REFERENCES `doctor_schedule` (`id`);
