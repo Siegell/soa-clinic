@@ -23,8 +23,10 @@ public class ConnectionFactory {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(jdbcUrl,
+        Connection connection = DriverManager.getConnection(jdbcUrl,
                 jdbcUser,
                 jdbcPassword);
+        connection.setAutoCommit(false);
+        return connection;
     }
 }
