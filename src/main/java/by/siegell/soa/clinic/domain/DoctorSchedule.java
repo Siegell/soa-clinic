@@ -3,6 +3,7 @@ package by.siegell.soa.clinic.domain;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalTime;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@ToString(callSuper = true)
 public class DoctorSchedule extends Entity {
     private LocalDate date;
     private Long doctorId;
