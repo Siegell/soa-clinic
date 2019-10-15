@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class AppointmentDaoImpl implements AppointmentDao {
 
@@ -202,5 +203,57 @@ public class AppointmentDaoImpl implements AppointmentDao {
             }
         }
         return appointments;
+    }
+
+    @Override
+    public Optional<Appointment> findBySubEntity(Appointment entity) {
+        String sql = "select id, doctorScheduleId, startTime, endTime, firstName,  middleName, lastName, createdAt, updatedAt "
+                + "FROM appointment "
+                + "WHERE doctorScheduleId = ? AND startTime = ? AND endtime = ? AND firstname = ? AND middlename = ? AND lastname = ?";
+        Connection c = null;
+        PreparedStatement s = null;
+        ResultSet r = null;
+        Appointment appointment = null;
+        try {
+            c = ConnectionFactory.getConnection();
+            s = c.prepareStatement(sql);
+            s.setLong(1, entity.getDoctorScheduleId());
+            s.setTime(2, Time.valueOf(entity.getStartTime()));
+            s.setTime(3, Time.valueOf(entity.getEndTime()));
+            s.setString(4, entity.getFirstName());
+            s.setString(5, entity.getMiddleName());
+            s.setString(6, entity.getLastName());
+            r = s.executeQuery();
+            if (r.next()) {
+                appointment = Appointment.builder()
+                        .doctorScheduleId(r.getLong("doctorScheduleId"))
+                        .startTime(r.getTime("startTime").toLocalTime())
+                        .endTime(r.getTime("endTime").toLocalTime())
+                        .firstName(r.getString("firstName"))
+                        .middleName(r.getString("middleName"))
+                        .lastName(r.getString("lastName"))
+                        .build();
+                appointment.setId(r.getLong("id"));
+                appointment.setCreatedAt(r.getTimestamp("createdAt"));
+                appointment.setUpdatedAt(r.getTimestamp("updatedAt"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                r.close();
+
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                s.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                c.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+        }
+        return Optional.of(appointment);
     }
 }

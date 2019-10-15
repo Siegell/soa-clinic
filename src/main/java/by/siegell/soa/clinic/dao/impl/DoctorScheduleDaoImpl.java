@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
 
@@ -183,5 +184,55 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             }
         }
         return doctorSchedules;
+    }
+
+    @Override
+    public Optional<DoctorSchedule> findBySubEntity(DoctorSchedule entity) {
+        String sql = "select id, date, doctorId, startWork, endWork,  maxAppointmentCount, createdAt, updatedAt "
+                + "FROM doctor_schedule "
+                + "WHERE date = ? AND doctorid = ? AND startwork = ? AND endwork = ? AND maxappointmentcount = ? ";
+        Connection c = null;
+        PreparedStatement s = null;
+        ResultSet r = null;
+        DoctorSchedule doctorSchedule = null;
+        try {
+            c = ConnectionFactory.getConnection();
+            s = c.prepareStatement(sql);
+            s.setDate(1, Date.valueOf(entity.getDate()));
+            s.setLong(2, entity.getDoctorId());
+            s.setTime(3, Time.valueOf(entity.getStartWork()));
+            s.setTime(4, Time.valueOf(entity.getEndWork()));
+            s.setInt(5, entity.getMaxAppointmentCount());
+            r = s.executeQuery();
+            if (r.next()) {
+                doctorSchedule = DoctorSchedule.builder()
+                        .date(r.getDate("date").toLocalDate())
+                        .doctorId(r.getLong("doctorId"))
+                        .startWork(r.getTime("startWork").toLocalTime())
+                        .endWork(r.getTime("endWork").toLocalTime())
+                        .maxAppointmentCount(r.getInt("maxAppointmentCount"))
+                        .build();
+                doctorSchedule.setId(r.getLong("id"));
+                doctorSchedule.setCreatedAt(r.getTimestamp("createdAt"));
+                doctorSchedule.setUpdatedAt(r.getTimestamp("updatedAt"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                r.close();
+
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                s.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                c.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+        }
+        return Optional.of(doctorSchedule);
     }
 }
