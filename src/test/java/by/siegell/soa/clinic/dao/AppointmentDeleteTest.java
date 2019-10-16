@@ -33,7 +33,6 @@ public class AppointmentDeleteTest {
         System.out.println(appointment);
         System.out.println("=================================");
 
-
         appointmentDao.delete(appointment.getId());
 
         appointmentDao.findAll().forEach(System.out::println);
