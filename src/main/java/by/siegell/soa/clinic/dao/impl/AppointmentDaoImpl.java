@@ -12,21 +12,20 @@ import java.util.Optional;
 
 public class AppointmentDaoImpl implements AppointmentDao {
 
-    /*
-    CREATE TABLE appointment
-(
-    id               SERIAL      NOT NULL,
-    createdAt        TIMESTAMP   NOT NULL,
-    updatedAt        TIMESTAMP   NOT NULL,
-    doctorScheduleId INT         NOT NULL,
-    startTime        TIME        NOT NULL,
-    endTime          TIME        NOT NULL,
-    firstName        varchar(50) NOT NULL,
-    middleName       varchar(50) NOT NULL,
-    lastName         varchar(50) NOT NULL,
-    PRIMARY KEY (id)
-);
-     */
+    private static Appointment fillAppointment(ResultSet r) throws SQLException {
+        Appointment appointment = Appointment.builder()
+                .doctorScheduleId(r.getLong("doctorScheduleId"))
+                .startTime(r.getTime("startTime").toLocalTime())
+                .endTime(r.getTime("endTime").toLocalTime())
+                .firstName(r.getString("firstName"))
+                .middleName(r.getString("middleName"))
+                .lastName(r.getString("lastName"))
+                .build();
+        appointment.setId(r.getLong("id"));
+        appointment.setCreatedAt(r.getTimestamp("createdAt"));
+        appointment.setUpdatedAt(r.getTimestamp("updatedAt"));
+        return appointment;
+    }
 
     @Override
     public void save(Appointment entity) {
@@ -97,17 +96,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
             s.setLong(1, id);
             r = s.executeQuery();
             if (r.next()) {
-                appointment = Appointment.builder()
-                        .doctorScheduleId(r.getLong("doctorScheduleId"))
-                        .startTime(r.getTime("startTime").toLocalTime())
-                        .endTime(r.getTime("endTime").toLocalTime())
-                        .firstName(r.getString("firstName"))
-                        .middleName(r.getString("middleName"))
-                        .lastName(r.getString("lastName"))
-                        .build();
-                appointment.setId(r.getLong("id"));
-                appointment.setCreatedAt(r.getTimestamp("createdAt"));
-                appointment.setUpdatedAt(r.getTimestamp("updatedAt"));
+                appointment = fillAppointment(r);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,23 +156,13 @@ public class AppointmentDaoImpl implements AppointmentDao {
         Connection c = null;
         Statement s = null;
         ResultSet r = null;
-        LinkedList<Appointment> appointments = new LinkedList<>();
+        List<Appointment> appointments = new LinkedList<>();
         try {
             c = ConnectionFactory.getConnection();
             s = c.createStatement();
             r = s.executeQuery(sql);
             while (r.next()) {
-                Appointment appointment = Appointment.builder()
-                        .doctorScheduleId(r.getLong("doctorScheduleId"))
-                        .startTime(r.getTime("startTime").toLocalTime())
-                        .endTime(r.getTime("endTime").toLocalTime())
-                        .firstName(r.getString("firstName"))
-                        .middleName(r.getString("middleName"))
-                        .lastName(r.getString("lastName"))
-                        .build();
-                appointment.setId(r.getLong("id"));
-                appointment.setCreatedAt(r.getTimestamp("createdAt"));
-                appointment.setUpdatedAt(r.getTimestamp("updatedAt"));
+                Appointment appointment = fillAppointment(r);
                 appointments.add(appointment);
             }
         } catch (Exception e) {
@@ -225,17 +204,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
             s.setString(6, entity.getLastName());
             r = s.executeQuery();
             if (r.next()) {
-                appointment = Appointment.builder()
-                        .doctorScheduleId(r.getLong("doctorScheduleId"))
-                        .startTime(r.getTime("startTime").toLocalTime())
-                        .endTime(r.getTime("endTime").toLocalTime())
-                        .firstName(r.getString("firstName"))
-                        .middleName(r.getString("middleName"))
-                        .lastName(r.getString("lastName"))
-                        .build();
-                appointment.setId(r.getLong("id"));
-                appointment.setCreatedAt(r.getTimestamp("createdAt"));
-                appointment.setUpdatedAt(r.getTimestamp("updatedAt"));
+                appointment = fillAppointment(r);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -255,5 +224,42 @@ public class AppointmentDaoImpl implements AppointmentDao {
             }
         }
         return Optional.of(appointment);
+    }
+
+    @Override
+    public List<Appointment> findByDoctorScheduleId(Long doctorScheduleId) {
+        String sql = "select id, doctorScheduleId, startTime, endTime, firstName,  middleName, lastName, createdAt, updatedAt "
+                + "FROM appointment "
+                + "WHERE doctorScheduleId = ?";
+        Connection c = null;
+        PreparedStatement s = null;
+        ResultSet r = null;
+        List<Appointment> appointments = new LinkedList<>();
+        try {
+            c = ConnectionFactory.getConnection();
+            s = c.prepareStatement(sql);
+            s.setLong(1, doctorScheduleId);
+            r = s.executeQuery();
+            while (r.next()) {
+                Appointment appointment = fillAppointment(r);
+                appointments.add(appointment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                r.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                s.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                c.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+        }
+        return appointments;
     }
 }

@@ -5,12 +5,27 @@ import by.siegell.soa.clinic.db.ConnectionFactory;
 import by.siegell.soa.clinic.domain.DoctorSchedule;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
+
+    private static DoctorSchedule fillDoctorSchedule(ResultSet r) throws SQLException {
+        DoctorSchedule doctorSchedule = DoctorSchedule.builder()
+                .date(r.getDate("date").toLocalDate())
+                .doctorId(r.getLong("doctorId"))
+                .startWork(r.getTime("startWork").toLocalTime())
+                .endWork(r.getTime("endWork").toLocalTime())
+                .maxAppointmentCount(r.getInt("maxAppointmentCount"))
+                .build();
+        doctorSchedule.setId(r.getLong("id"));
+        doctorSchedule.setCreatedAt(r.getTimestamp("createdAt"));
+        doctorSchedule.setUpdatedAt(r.getTimestamp("updatedAt"));
+        return doctorSchedule;
+    }
 
     @Override
     public void save(DoctorSchedule entity) {
@@ -80,16 +95,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             s.setLong(1, id);
             r = s.executeQuery();
             if (r.next()) {
-                doctorSchedule = DoctorSchedule.builder()
-                        .date(r.getDate("date").toLocalDate())
-                        .doctorId(r.getLong("doctorId"))
-                        .startWork(r.getTime("startWork").toLocalTime())
-                        .endWork(r.getTime("endWork").toLocalTime())
-                        .maxAppointmentCount(r.getInt("maxAppointmentCount"))
-                        .build();
-                doctorSchedule.setId(r.getLong("id"));
-                doctorSchedule.setCreatedAt(r.getTimestamp("createdAt"));
-                doctorSchedule.setUpdatedAt(r.getTimestamp("updatedAt"));
+                doctorSchedule = fillDoctorSchedule(r);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,16 +161,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             s = c.createStatement();
             r = s.executeQuery(sql);
             while (r.next()) {
-                DoctorSchedule doctorSchedule = DoctorSchedule.builder()
-                        .date(r.getDate("date").toLocalDate())
-                        .doctorId(r.getLong("doctorId"))
-                        .startWork(r.getTime("startWork").toLocalTime())
-                        .endWork(r.getTime("endWork").toLocalTime())
-                        .maxAppointmentCount(r.getInt("maxAppointmentCount"))
-                        .build();
-                doctorSchedule.setId(r.getLong("id"));
-                doctorSchedule.setCreatedAt(r.getTimestamp("createdAt"));
-                doctorSchedule.setUpdatedAt(r.getTimestamp("updatedAt"));
+                DoctorSchedule doctorSchedule = fillDoctorSchedule(r);
                 doctorSchedules.add(doctorSchedule);
             }
         } catch (Exception e) {
@@ -205,16 +202,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             s.setInt(5, entity.getMaxAppointmentCount());
             r = s.executeQuery();
             if (r.next()) {
-                doctorSchedule = DoctorSchedule.builder()
-                        .date(r.getDate("date").toLocalDate())
-                        .doctorId(r.getLong("doctorId"))
-                        .startWork(r.getTime("startWork").toLocalTime())
-                        .endWork(r.getTime("endWork").toLocalTime())
-                        .maxAppointmentCount(r.getInt("maxAppointmentCount"))
-                        .build();
-                doctorSchedule.setId(r.getLong("id"));
-                doctorSchedule.setCreatedAt(r.getTimestamp("createdAt"));
-                doctorSchedule.setUpdatedAt(r.getTimestamp("updatedAt"));
+                doctorSchedule = fillDoctorSchedule(r);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -234,5 +222,43 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             }
         }
         return Optional.of(doctorSchedule);
+    }
+
+    @Override
+    public DoctorSchedule findByDoctorIdAndDate(Long doctorId, LocalDate date) {
+        String sql = "select id, date, doctorId, startWork, endWork,  maxAppointmentCount, createdAt, updatedAt "
+                + "FROM doctor_schedule "
+                + "WHERE date = ? AND doctorid = ?";
+        Connection c = null;
+        PreparedStatement s = null;
+        ResultSet r = null;
+        DoctorSchedule doctorSchedule = null;
+        try {
+            c = ConnectionFactory.getConnection();
+            s = c.prepareStatement(sql);
+            s.setDate(1, Date.valueOf(date));
+            s.setLong(2, doctorId);
+            r = s.executeQuery();
+            if (r.next()) {
+                doctorSchedule = fillDoctorSchedule(r);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                r.close();
+
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                s.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+            try {
+                c.close();
+            } catch (NullPointerException | SQLException ignored) {
+            }
+        }
+        return doctorSchedule;
     }
 }
