@@ -1,8 +1,8 @@
 package by.siegell.soa.clinic.dao.impl;
 
 import by.siegell.soa.clinic.dao.AppointmentDao;
-import by.siegell.soa.clinic.db.ConnectionFactory;
 import by.siegell.soa.clinic.domain.Appointment;
+import by.siegell.soa.clinic.imap.IdentityMap;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class AppointmentDaoImpl implements AppointmentDao {
+public class AppointmentDaoImpl extends BaseDaoMySqlImpl implements AppointmentDao {
+
+    private IdentityMap<Appointment, Long> imap = new IdentityMap<>();
 
     private static Appointment fillAppointment(ResultSet r) throws SQLException {
         Appointment appointment = Appointment.builder()
@@ -45,7 +47,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, entity.getDoctorScheduleId());
             s.setTime(2, Time.valueOf(entity.getStartTime()));
@@ -54,13 +56,16 @@ public class AppointmentDaoImpl implements AppointmentDao {
             s.setString(5, entity.getMiddleName());
             s.setString(6, entity.getLastName());
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            s.setTimestamp(8, now);
             if (update) {
                 s.setTimestamp(7, entity.getCreatedAt());
                 s.setLong(9, entity.getId());
+
+                imap.putObject(entity.getId(), entity);
+
             } else {
                 s.setTimestamp(7, now);
             }
-            s.setTimestamp(8, now);
             s.executeUpdate();
             c.commit();
         } catch (Exception e) {
@@ -83,27 +88,31 @@ public class AppointmentDaoImpl implements AppointmentDao {
 
     @Override
     public Appointment findById(Long id) {
+        Appointment appointment = imap.getObject(id);
+        if (appointment != null) {
+            return appointment;
+        }
+
         String sql = "select id, doctorScheduleId, startTime, endTime, firstName,  middleName, lastName, createdAt, updatedAt "
                 + "FROM appointment "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         ResultSet r = null;
-        Appointment appointment = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             r = s.executeQuery();
             if (r.next()) {
                 appointment = fillAppointment(r);
+                imap.putObject(appointment.getId(), appointment);
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 r.close();
-
             } catch (NullPointerException | SQLException ignored) {
             }
             try {
@@ -120,12 +129,14 @@ public class AppointmentDaoImpl implements AppointmentDao {
 
     @Override
     public void delete(Long id) {
+        imap.deleteObject(id);
+
         String sql = "DELETE FROM appointment "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             s.executeUpdate();
@@ -158,12 +169,13 @@ public class AppointmentDaoImpl implements AppointmentDao {
         ResultSet r = null;
         List<Appointment> appointments = new LinkedList<>();
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.createStatement();
             r = s.executeQuery(sql);
             while (r.next()) {
                 Appointment appointment = fillAppointment(r);
                 appointments.add(appointment);
+                imap.putObject(appointment.getId(), appointment);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,7 +206,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
         ResultSet r = null;
         Appointment appointment = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, entity.getDoctorScheduleId());
             s.setTime(2, Time.valueOf(entity.getStartTime()));
@@ -236,7 +248,7 @@ public class AppointmentDaoImpl implements AppointmentDao {
         ResultSet r = null;
         List<Appointment> appointments = new LinkedList<>();
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, doctorScheduleId);
             r = s.executeQuery();

@@ -1,8 +1,8 @@
 package by.siegell.soa.clinic.dao.impl;
 
 import by.siegell.soa.clinic.dao.DoctorDao;
-import by.siegell.soa.clinic.db.ConnectionFactory;
 import by.siegell.soa.clinic.domain.Doctor;
+import by.siegell.soa.clinic.imap.IdentityMap;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -10,7 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class DoctorDaoImpl implements DoctorDao {
+public class DoctorDaoImpl extends BaseDaoMySqlImpl implements DoctorDao {
+
+    private IdentityMap<Doctor, Long> imap = new IdentityMap<>();
 
     @Override
     public void save(Doctor entity) {
@@ -30,7 +32,7 @@ public class DoctorDaoImpl implements DoctorDao {
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setString(1, entity.getFirstName());
             s.setString(2, entity.getMiddleName());
@@ -39,13 +41,16 @@ public class DoctorDaoImpl implements DoctorDao {
             s.setString(5, entity.getDistrict());
             s.setString(6, entity.getCabinet());
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            s.setTimestamp(8, now);
             if (update) {
                 s.setTimestamp(7, entity.getCreatedAt());
                 s.setLong(9, entity.getId());
+
+                imap.putObject(entity.getId(), entity);
+
             } else {
                 s.setTimestamp(7, now);
             }
-            s.setTimestamp(8, now);
             s.executeUpdate();
             c.commit();
         } catch (Exception e) {
@@ -68,15 +73,20 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public Doctor findById(Long id) {
+        Doctor doctor = imap.getObject(id);
+        if (doctor != null) {
+            return doctor;
+        }
+
+
         String sql = "select id, firstName, middleName, lastName, specialization,  district, cabinet, createdAt, updatedAt "
                 + "FROM doctor "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         ResultSet r = null;
-        Doctor doctor = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             r = s.executeQuery();
@@ -92,6 +102,9 @@ public class DoctorDaoImpl implements DoctorDao {
                 doctor.setId(r.getLong("id"));
                 doctor.setCreatedAt(r.getTimestamp("createdAt"));
                 doctor.setUpdatedAt(r.getTimestamp("updatedAt"));
+
+                imap.putObject(doctor.getId(), doctor);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,12 +128,14 @@ public class DoctorDaoImpl implements DoctorDao {
 
     @Override
     public void delete(Long id) {
+        imap.deleteObject(id);
+
         String sql = "DELETE FROM doctor "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             s.executeUpdate();
@@ -153,7 +168,7 @@ public class DoctorDaoImpl implements DoctorDao {
         ResultSet r = null;
         LinkedList<Doctor> doctors = new LinkedList<>();
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.createStatement();
             r = s.executeQuery(sql);
             while (r.next()) {
@@ -169,6 +184,7 @@ public class DoctorDaoImpl implements DoctorDao {
                 doctor.setCreatedAt(r.getTimestamp("createdAt"));
                 doctor.setUpdatedAt(r.getTimestamp("updatedAt"));
                 doctors.add(doctor);
+                imap.putObject(doctor.getId(), doctor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,7 +215,7 @@ public class DoctorDaoImpl implements DoctorDao {
         ResultSet r = null;
         Doctor doctor = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setString(1, entity.getFirstName());
             s.setString(2, entity.getMiddleName());

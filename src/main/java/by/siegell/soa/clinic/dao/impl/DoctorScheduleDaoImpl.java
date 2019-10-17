@@ -1,8 +1,8 @@
 package by.siegell.soa.clinic.dao.impl;
 
 import by.siegell.soa.clinic.dao.DoctorScheduleDao;
-import by.siegell.soa.clinic.db.ConnectionFactory;
 import by.siegell.soa.clinic.domain.DoctorSchedule;
+import by.siegell.soa.clinic.imap.IdentityMap;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,7 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
+public class DoctorScheduleDaoImpl extends BaseDaoMySqlImpl implements DoctorScheduleDao {
+
+    private IdentityMap<DoctorSchedule, Long> imap = new IdentityMap<>();
 
     private static DoctorSchedule fillDoctorSchedule(ResultSet r) throws SQLException {
         DoctorSchedule doctorSchedule = DoctorSchedule.builder()
@@ -45,7 +47,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setDate(1, Date.valueOf(entity.getDate()));
             s.setLong(2, entity.getDoctorId());
@@ -53,13 +55,16 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
             s.setTime(4, Time.valueOf(entity.getEndWork()));
             s.setInt(5, entity.getMaxAppointmentCount());
             Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+            s.setTimestamp(7, now);
             if (update) {
                 s.setTimestamp(6, entity.getCreatedAt());
                 s.setLong(8, entity.getId());
+
+                imap.putObject(entity.getId(), entity);
+
             } else {
                 s.setTimestamp(6, now);
             }
-            s.setTimestamp(7, now);
             s.executeUpdate();
             c.commit();
         } catch (Exception e) {
@@ -82,20 +87,25 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
 
     @Override
     public DoctorSchedule findById(Long id) {
+        DoctorSchedule doctorSchedule = imap.getObject(id);
+        if (doctorSchedule != null) {
+            return doctorSchedule;
+        }
+
         String sql = "select id, date, doctorId, startWork, endWork,  maxAppointmentCount, createdAt, updatedAt "
                 + "FROM doctor_schedule "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         ResultSet r = null;
-        DoctorSchedule doctorSchedule = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             r = s.executeQuery();
             if (r.next()) {
                 doctorSchedule = fillDoctorSchedule(r);
+                imap.putObject(doctorSchedule.getId(), doctorSchedule);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,12 +129,13 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
 
     @Override
     public void delete(Long id) {
+        imap.deleteObject(id);
         String sql = "DELETE FROM doctor_schedule "
                 + "WHERE id = ?";
         Connection c = null;
         PreparedStatement s = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setLong(1, id);
             s.executeUpdate();
@@ -157,12 +168,13 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
         ResultSet r = null;
         LinkedList<DoctorSchedule> doctorSchedules = new LinkedList<>();
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.createStatement();
             r = s.executeQuery(sql);
             while (r.next()) {
                 DoctorSchedule doctorSchedule = fillDoctorSchedule(r);
                 doctorSchedules.add(doctorSchedule);
+                imap.putObject(doctorSchedule.getId(), doctorSchedule);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -193,7 +205,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
         ResultSet r = null;
         DoctorSchedule doctorSchedule = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setDate(1, Date.valueOf(entity.getDate()));
             s.setLong(2, entity.getDoctorId());
@@ -234,7 +246,7 @@ public class DoctorScheduleDaoImpl implements DoctorScheduleDao {
         ResultSet r = null;
         DoctorSchedule doctorSchedule = null;
         try {
-            c = ConnectionFactory.getConnection();
+            c = getConnection();
             s = c.prepareStatement(sql);
             s.setDate(1, Date.valueOf(date));
             s.setLong(2, doctorId);

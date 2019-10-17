@@ -5,9 +5,14 @@ import java.util.Map;
 
 public class IoCConfigurer {
     public static void configure() throws IoCException {
-        IoCContainer.registerClass("by.siegell.soa.clinic.dao.DoctorDao", "by.siegell.soa.clinic.dao.impl.DoctorDaoImpl");
-        IoCContainer.registerClass("by.siegell.soa.clinic.dao.DoctorScheduleDao", "by.siegell.soa.clinic.dao.impl.DoctorScheduleDaoImpl");
-        IoCContainer.registerClass("by.siegell.soa.clinic.dao.AppointmentDao", "by.siegell.soa.clinic.dao.impl.AppointmentDaoImpl");
+        IoCContainer.registerFactory("java.sql.Connection", "by.siegell.soa.clinic.pool.ConnectionFactory");
+
+        Map<String, String> daoDependencies = new HashMap<>();
+        daoDependencies.put("java.sql.Connection", "setConnection");
+
+        IoCContainer.registerClass("by.siegell.soa.clinic.dao.DoctorDao", "by.siegell.soa.clinic.dao.impl.DoctorDaoImpl", daoDependencies);
+        IoCContainer.registerClass("by.siegell.soa.clinic.dao.DoctorScheduleDao", "by.siegell.soa.clinic.dao.impl.DoctorScheduleDaoImpl", daoDependencies);
+        IoCContainer.registerClass("by.siegell.soa.clinic.dao.AppointmentDao", "by.siegell.soa.clinic.dao.impl.AppointmentDaoImpl", daoDependencies);
 
 
         Map<String, String> doctorServiceDependencies = new HashMap<>();
