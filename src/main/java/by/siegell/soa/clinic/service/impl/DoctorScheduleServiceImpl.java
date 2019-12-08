@@ -26,6 +26,11 @@ public class DoctorScheduleServiceImpl implements DoctorScheduleService {
 
     @Override
     public void delete(Long id) {
+        doctorScheduleDao.delete(id);
+    }
 
+    @Override
+    public DoctorSchedule findById(long id) {
+        return doctorScheduleDao.findById(id);
     }
 }

@@ -21,11 +21,16 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public void save(Doctor doctor) {
-
+        doctorDao.save(doctor);
     }
 
     @Override
     public void delete(Long id) {
+        doctorDao.delete(id);
+    }
 
+    @Override
+    public Doctor findById(Long id) {
+        return doctorDao.findById(id);
     }
 }

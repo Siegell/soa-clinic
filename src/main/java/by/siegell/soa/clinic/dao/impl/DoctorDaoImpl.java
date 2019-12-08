@@ -57,6 +57,7 @@ public class DoctorDaoImpl extends BaseDaoMySqlImpl implements DoctorDao {
             try {
                 c.rollback();
             } catch (SQLException ignored) {
+                e.printStackTrace();
             }
             e.printStackTrace();
         } finally {
@@ -112,15 +113,18 @@ public class DoctorDaoImpl extends BaseDaoMySqlImpl implements DoctorDao {
             try {
                 r.close();
 
-            } catch (NullPointerException | SQLException ignored) {
+            } catch (NullPointerException | SQLException e) {
+                e.printStackTrace();
             }
             try {
                 s.close();
-            } catch (NullPointerException | SQLException ignored) {
+            } catch (NullPointerException | SQLException e) {
+                e.printStackTrace();
             }
             try {
                 c.close();
-            } catch (NullPointerException | SQLException ignored) {
+            } catch (NullPointerException | SQLException e) {
+                e.printStackTrace();
             }
         }
         return doctor;

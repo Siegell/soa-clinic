@@ -1,16 +1,18 @@
 package by.siegell.soa.clinic.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
-@EqualsAndHashCode(callSuper = true)
+import java.sql.Timestamp;
+
 @Data
 @Builder
-@ToString(callSuper = true)
-public class Doctor extends Entity {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Doctor {
+    protected Long id;
+    protected Timestamp createdAt;
+    protected Timestamp updatedAt;
     private String firstName;
     private String middleName;
     private String lastName;
@@ -20,6 +22,10 @@ public class Doctor extends Entity {
     private String cabinet;
 
     public boolean isSpecialist() {
-        return StringUtils.isNoneEmpty(district);
+        return StringUtils.isEmpty(district);
+    }
+
+    public boolean isEmpty() {
+        return getId() == null && getCreatedAt() == null && getUpdatedAt() == null;
     }
 }

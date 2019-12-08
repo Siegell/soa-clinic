@@ -14,4 +14,6 @@ public interface AppointmentService {
     void delete(Long id);
 
     Duration getDoctorAppointmentWorkTime(Long doctorId, LocalDate date);
+
+    Appointment findById(long id);
 }

@@ -47,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
 
         DoctorSchedule doctorSchedule = doctorScheduleDao.findById(appointment.getDoctorScheduleId());
-        if (appointment.getStartTime().isAfter(doctorSchedule.getStartWork()) || appointment.getEndTime().isBefore(doctorSchedule.getEndWork())) {
+        if (appointment.getStartTime().isBefore(doctorSchedule.getStartWork()) || appointment.getEndTime().isAfter(doctorSchedule.getEndWork())) {
             validAppointment = false;
         }
 
@@ -77,6 +77,11 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Duration getDoctorAppointmentWorkTime(Long doctorId, LocalDate date) {
         return getDoctorAppointmentWorkTime(doctorScheduleDao.findByDoctorIdAndDate(doctorId, date));
+    }
+
+    @Override
+    public Appointment findById(long id) {
+        return appointmentDao.findById(id);
     }
 
     private Duration getDoctorAppointmentWorkTime(DoctorSchedule doctorSchedule) {

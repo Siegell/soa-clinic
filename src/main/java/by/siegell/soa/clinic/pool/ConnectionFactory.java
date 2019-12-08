@@ -7,7 +7,7 @@ import java.sql.Connection;
 
 public class ConnectionFactory implements Factory<Connection> {
     @Override
-    public Connection get() throws IoCException {
+    public Connection get(String key) throws IoCException {
         try {
             return ConnectionPool.getInstance().getConnection();
         } catch (PoolException e) {

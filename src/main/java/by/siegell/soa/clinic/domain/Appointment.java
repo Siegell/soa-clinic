@@ -1,19 +1,20 @@
 package by.siegell.soa.clinic.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-@ToString(callSuper = true)
-public class Appointment extends Entity {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Appointment {
+    protected Long id;
+    protected Timestamp createdAt;
+    protected Timestamp updatedAt;
     private Long doctorScheduleId;
     private LocalTime startTime;
     private LocalTime endTime;
@@ -29,4 +30,9 @@ public class Appointment extends Entity {
     public boolean isOpenAppointment() {
         return StringUtils.isNoneEmpty(firstName) && StringUtils.isNoneEmpty(middleName) && StringUtils.isNoneEmpty(lastName);
     }
+
+    public boolean isEmpty() {
+        return getId() == null && getCreatedAt() == null && getUpdatedAt() == null;
+    }
+
 }

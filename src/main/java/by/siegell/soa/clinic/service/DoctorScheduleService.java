@@ -10,4 +10,6 @@ public interface DoctorScheduleService {
     void save(DoctorSchedule doctorSchedule);
 
     void delete(Long id);
+
+    DoctorSchedule findById(long id);
 }

@@ -48,3 +48,12 @@ ALTER TABLE doctor_schedule
 
 ALTER TABLE appointment
     ADD CONSTRAINT appointment_fk0 FOREIGN KEY (doctorScheduleId) REFERENCES doctor_schedule (id);
+
+CREATE TABLE "user"
+(
+    id       SERIAL      NOT NULL,
+    username varchar(50) NOT NULL,
+    password varchar(50) NOT NULL,
+    roles    varchar(50) NOT NULL,
+    PRIMARY KEY (id)
+);

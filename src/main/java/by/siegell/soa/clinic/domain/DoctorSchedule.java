@@ -1,19 +1,21 @@
 package by.siegell.soa.clinic.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-@ToString(callSuper = true)
-public class DoctorSchedule extends Entity {
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+public class DoctorSchedule {
+    protected Long id;
+    protected Timestamp createdAt;
+    protected Timestamp updatedAt;
     private LocalDate date;
     private Long doctorId;
 
@@ -25,4 +27,9 @@ public class DoctorSchedule extends Entity {
     public Duration getWorkTime() {
         return Duration.between(startWork, endWork);
     }
+
+    public boolean isEmpty() {
+        return getId() == null && getCreatedAt() == null && getUpdatedAt() == null;
+    }
+
 }

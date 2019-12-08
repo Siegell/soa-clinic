@@ -36,10 +36,10 @@ public class ConnectionPool {
             try {
                 connection = freeConnections.poll();
                 if (connection != null) {
-                    if (!connection.isValid(validationTimout)) {
-                        close(connection);
-                        connection = null;
-                    }
+//                    if (!connection.isValid(validationTimout)) {
+//                        close(connection);
+//                        connection = null;
+//                    }
                 } else if (maxSize == 0 || usedConnections.size() < maxSize) {
                     connection = establishConnection();
                 } else {
@@ -98,7 +98,7 @@ public class ConnectionPool {
     }
 
     public void init() throws PoolException {
-        init(DbConstants.JDBC_DRIVER, DbConstants.URL, DbConstants.USERNAME, DbConstants.PASSWORD);
+        init(DbConstants.JDBC_DRIVER, DbConstants.URL, DbConstants.USERNAME, DbConstants.PASSWORD, DbConstants.POOL_MIN_SIZE, DbConstants.POOL_MAX_SIZE, DbConstants.POOL_CONNECTION_VALIDATION_TIMEOUT);
     }
 
     public void destroy() {

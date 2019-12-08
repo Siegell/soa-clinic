@@ -13,7 +13,10 @@ repositories {
 }
 
 dependencies {
-    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
+    providedCompile "javax.servlet:javax.servlet-api:3.1.0"
+    compile group: 'javax.servlet', name: 'jstl', version: '1.2'
 }

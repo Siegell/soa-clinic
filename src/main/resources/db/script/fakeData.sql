@@ -1,4 +1,4 @@
-INSERT INTO doctor (firstname, middlename, lastname, specialization, district, cabinet, createdat, updatedat)
+INSERT INTO doctor (lastname, firstname, middlename, specialization, district, cabinet, createdat, updatedat)
 VALUES ('Гребенщиков', 'Егор', 'Филиппович', 'УЧАСТКОВЫЙ', '15Б', '105А', '2019-09-28 19:10:25-07',
         '2016-06-22 19:10:25-07'),
        ('Жиренков', 'Илья', 'Федосиевич', 'УЗКИЙ ДОКТОР', '', '654', '2019-09-28 19:10:25-07',
@@ -11,7 +11,7 @@ VALUES ('2019-09-29', 1, '08:00:00-00', '17:00:00-00', 5, '2019-09-28 19:10:25-0
        ('2019-09-29', 2, '08:00:00-00', '17:00:00-00', 5, '2019-09-28 19:10:25-07', '2019-09-28 19:10:25-07'),
        ('2019-09-29', 3, '08:00:00-00', '17:00:00-00', 5, '2019-09-28 19:10:25-07', '2019-09-28 19:10:25-07');
 
-INSERT INTO appointment (doctorscheduleid, starttime, endtime, firstname, middlename, lastname, createdat, updatedat)
+INSERT INTO appointment (doctorscheduleid, starttime, endtime, lastname, firstname, middlename, createdat, updatedat)
 VALUES (1, '08:05:00-07', '08:15:00-07', 'Шалаганова', 'Аза', 'Геннадиевна', '2019-09-28 19:10:25-07',
         '2019-09-28 19:10:25-07'),
        (1, '08:15:00-07', '08:25:00-07', 'Богун', 'Ипполит', 'Адамович', '2019-09-28 19:10:25-07',
@@ -30,3 +30,6 @@ VALUES (1, '08:05:00-07', '08:15:00-07', 'Шалаганова', 'Аза', 'Ге
         '2019-09-28 19:10:25-07'),
        (3, '08:25:00-07', '08:35:00-07', 'Негин', 'Игорь', 'Касьянович', '2019-09-28 19:10:25-07',
         '2019-09-28 19:10:25-07');
+
+INSERT INTO "user" (username, password, roles)
+VALUES ('admin', 'admin', 'admin');

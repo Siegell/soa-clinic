@@ -1,11 +1,9 @@
 package by.siegell.soa.clinic.dao;
 
-import by.siegell.soa.clinic.domain.Entity;
-
 import java.util.List;
 import java.util.Optional;
 
-public interface Dao<T extends Entity> {
+public interface Dao<T> {
     void save(T entity);
 
     T findById(Long id);
