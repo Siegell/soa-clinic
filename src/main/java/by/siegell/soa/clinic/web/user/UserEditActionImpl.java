@@ -24,14 +24,18 @@ public class UserEditActionImpl extends Action {
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = null;
-
-        id = Long.parseLong(req.getParameter("id"));
-
-        if (id != null) {
-            User user = userService.findById(id);
-            req.setAttribute("user", user);
+        User user = null;
+        try {
+            id = Long.parseLong(req.getParameter("id"));
+        } catch (Exception ignored) {
         }
 
+        if (id != null) {
+            user = userService.findById(id);
+        } else {
+            user = new User();
+        }
+        req.setAttribute("user", user);
         return null;
     }
 }
