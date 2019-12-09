@@ -23,9 +23,18 @@ public class DoctorScheduleDeleteActionImpl extends Action {
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = null;
+        Long doctorId = null;
+
         try {
             id = Long.parseLong(req.getParameter("id"));
             doctorScheduleService.delete(id);
-        } catch (NumberFormatException ignored) {}
-        return new ActionResult("/doctor_schedule/list.html");    }
+        } catch (NumberFormatException ignored) {
+        }
+        try {
+            doctorId = Long.parseLong(req.getParameter("doctorId"));
+        } catch (Exception ignored) {
+        }
+
+        return new ActionResult("/doctor_schedule/list.html?doctorId=" + doctorId);
+    }
 }

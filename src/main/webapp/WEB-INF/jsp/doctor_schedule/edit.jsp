@@ -34,7 +34,9 @@
         <button>Сохранить</button>
     </form>
     <c:if test="${not empty doctorSchedule.id}">
-        <c:url var="deleteUrl" value="/doctor_schedule/delete.html"/>
+        <c:url var="deleteUrl" value="/doctor_schedule/delete.html">
+            <c:param name="doctorId" value="${doctorSchedule.doctorId}"/>
+        </c:url>
         <form action="${deleteUrl}" method="post">
             <input type="hidden" name="id" value="${doctorSchedule.id}">
             <button>Удалить</button>

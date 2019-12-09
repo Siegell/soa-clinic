@@ -19,12 +19,17 @@ public class AppointmentDeleteActionImpl extends Action {
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = null;
+        Long doctorScheduleId = null;
         try {
             id = Long.parseLong(req.getParameter("id"));
             appointmentService.delete(id);
         } catch (NumberFormatException ignored) {
         }
-        return new ActionResult("/appointment/list.html");
+        try {
+            doctorScheduleId = Long.parseLong(req.getParameter("doctorScheduleId"));
+        } catch (Exception ignored) {
+        }
+        return new ActionResult("/appointment/list.html?doctorScheduleId=" + doctorScheduleId);
     }
 
     public void setAppointmentService(AppointmentService appointmentService) {
