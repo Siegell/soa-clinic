@@ -40,6 +40,7 @@ public class UserSaveActionImpl extends Action {
         User entity = User.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
+                .roles(req.getParameter("roles"))
                 .build();
         try {
             entity.setId(Long.parseLong(req.getParameter("id")));
