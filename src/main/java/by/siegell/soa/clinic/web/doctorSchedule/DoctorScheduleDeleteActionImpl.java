@@ -9,11 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DoctorScheduleDeleteActionImpl implements Action {
+public class DoctorScheduleDeleteActionImpl extends Action {
     private DoctorScheduleService doctorScheduleService;
 
     public void setDoctorScheduleService(DoctorScheduleService doctorScheduleService) {
         this.doctorScheduleService = doctorScheduleService;
+    }
+
+    {
+        permissions = "admin|nurse";
     }
 
     @Override

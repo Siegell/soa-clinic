@@ -11,12 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserSaveActionImpl implements Action {
+public class UserSaveActionImpl extends Action {
 
     private UserService userService;
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    {
+        permissions = "admin";
     }
 
     @Override
@@ -33,10 +37,15 @@ public class UserSaveActionImpl implements Action {
     }
 
     private User getUser(HttpServletRequest req) {
-        return User.builder()
-                .id(Long.parseLong(req.getParameter("id")))
+        User entity = User.builder()
                 .username(req.getParameter("username"))
                 .password(req.getParameter("password"))
                 .build();
+        try {
+            entity.setId(Long.parseLong(req.getParameter("id")));
+        } catch (Exception ignored) {
+        }
+        return entity;
+
     }
 }

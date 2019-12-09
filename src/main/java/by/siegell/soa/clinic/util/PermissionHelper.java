@@ -15,10 +15,10 @@ public class PermissionHelper {
     public boolean hasPermission(Long userId, String role) {
         User user = userService.findById(userId);
         String roles = user.getRoles();
-        return Arrays.stream(roles.split("|")).allMatch(s -> s.equals(role));
+        return Arrays.stream(roles.split("\\|")).allMatch(s -> s.equals(role));
     }
 
-    public boolean hasAnyPermission(Long userId, String... roles) {
+    public boolean hasAnyPermission(Long userId, String[] roles) {
         boolean hasPermission = false;
         for (String role : roles) {
             hasPermission = hasPermission || hasPermission(userId, role);

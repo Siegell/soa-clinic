@@ -20,12 +20,12 @@
         <c:if test="${not empty user.id}">
             <input type="hidden" name="id" value="${user.id}">
         </c:if>
-        <label for="first-name">Имя пользователя:</label><br>
-        <input id="first-name" name="firstName" value="${user.username}"><br>
-        <label for="last-name">Пароль:</label><br>
-        <input id="last-name" name="lastName" value="${user.password}"><br>
-        <label for="last-name">Роли(без пробелов через |):</label><br>
-        <input id="middle-name" name="middleName" value="${user.roles}"><br>
+        <label for="username">Имя пользователя:</label><br>
+        <input id="username" name="username" value="${user.username}"><br>
+        <label for="password">Пароль:</label><br>
+        <input id="password" name="password" value="${user.password}"><br>
+        <label for="roles">Роли(без пробелов через |, пример: admin|nurse):</label><br>
+        <input id="roles" name="roles" value="${user.roles}"><br>
         <button>Сохранить</button>
     </form>
     <c:if test="${not empty user.id}">
@@ -35,4 +35,7 @@
             <button>Удалить</button>
         </form>
     </c:if>
+    <c:url var="logout" value="/logout.html"/>
+    <p><a href="${logout}">logout</a></p>
+
 </u:html>

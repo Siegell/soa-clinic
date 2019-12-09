@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AppointmentEditActionImpl implements Action {
+public class AppointmentEditActionImpl extends Action {
 
     private AppointmentService appointmentService;
 
@@ -18,14 +18,30 @@ public class AppointmentEditActionImpl implements Action {
         this.appointmentService = appointmentService;
     }
 
+    {
+        permissions = "admin|nurse";
+    }
+
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = null;
+        Long doctorScheduleId = null;
+        Appointment appointment = null;
         try {
             id = Long.parseLong(req.getParameter("id"));
-            Appointment appointment = appointmentService.findById(id);
-            req.setAttribute("appointment", appointment);
+        } catch (Exception ignored) {
+        }
+        try {
+            doctorScheduleId = Long.parseLong(req.getParameter("doctorScheduleId"));
         } catch (Exception ignored) {}
+        if (id != null) {
+            appointment = appointmentService.findById(id);
+        } else {
+            appointment = new Appointment();
+            appointment.setDoctorScheduleId(doctorScheduleId);
+        }
+        req.setAttribute("appointment", appointment);
+
         return null;
     }
 }

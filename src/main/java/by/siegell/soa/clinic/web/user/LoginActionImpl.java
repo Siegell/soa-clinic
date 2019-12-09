@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class LoginActionImpl implements Action {
+public class LoginActionImpl extends Action {
     private UserService userService;
 
     public void setUserService(UserService userService) {

@@ -10,24 +10,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DoctorEditActionImpl implements Action {
+public class DoctorEditActionImpl extends Action {
     private DoctorService service;
 
     public void setDoctorService(DoctorService service) {
         this.service = service;
     }
 
+    {
+        permissions = "admin|nurse";
+    }
+
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = null;
+        Doctor doctor = null;
 
-        id = Long.parseLong(req.getParameter("id"));
-
-        if (id != null) {
-            Doctor doctor = service.findById(id);
-            req.setAttribute("doctor", doctor);
+        try {
+            id = Long.parseLong(req.getParameter("id"));
+        } catch (Exception ignored) {
         }
 
+        if (id != null) {
+            doctor = service.findById(id);
+        } else {
+            doctor = new Doctor();
+        }
+
+        req.setAttribute("doctor", doctor);
         return null;
     }
 }

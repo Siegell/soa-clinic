@@ -12,11 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
 
-public class DoctorSaveActionImpl implements Action {
+public class DoctorSaveActionImpl extends Action {
     private DoctorService doctorService;
 
     public void setDoctorService(DoctorService doctorService) {
         this.doctorService = doctorService;
+    }
+
+    {
+        permissions = "admin|nurse";
     }
 
     @Override
@@ -33,16 +37,20 @@ public class DoctorSaveActionImpl implements Action {
     }
 
     private Doctor getDoctor(HttpServletRequest req) {
-        return Doctor.builder()
+        Doctor entity = Doctor.builder()
                 .firstName(req.getParameter("firstName"))
                 .lastName(req.getParameter("lastName"))
                 .middleName(req.getParameter("middleName"))
                 .cabinet(req.getParameter("cabinet"))
                 .district(req.getParameter("district"))
                 .specialization(req.getParameter("specialization"))
-                .id(Long.parseLong(req.getParameter("id")))
-                .createdAt(Timestamp.valueOf(req.getParameter("createdAt")))
-                .updatedAt(Timestamp.valueOf(req.getParameter("updatedAt")))
                 .build();
+        try {
+            entity.setId(Long.parseLong(req.getParameter("id")));
+            entity.setCreatedAt(Timestamp.valueOf(req.getParameter("createdAt")));
+            entity.setUpdatedAt(Timestamp.valueOf(req.getParameter("updatedAt")));
+        } catch (Exception ignored) {
+        }
+        return entity;
     }
 }

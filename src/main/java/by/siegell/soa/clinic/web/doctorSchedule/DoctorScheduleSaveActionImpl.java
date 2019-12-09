@@ -14,12 +14,16 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class DoctorScheduleSaveActionImpl implements Action {
+public class DoctorScheduleSaveActionImpl extends Action {
 
     private DoctorScheduleService doctorScheduleService;
 
     public void setDoctorScheduleService(DoctorScheduleService doctorScheduleService) {
         this.doctorScheduleService = doctorScheduleService;
+    }
+
+    {
+        permissions = "admin|nurse";
     }
 
     @Override
@@ -36,15 +40,19 @@ public class DoctorScheduleSaveActionImpl implements Action {
     }
 
     private DoctorSchedule getDoctorSchedule(HttpServletRequest req) {
-        return DoctorSchedule.builder()
+        DoctorSchedule entity = DoctorSchedule.builder()
                 .date(LocalDate.parse(req.getParameter("date")))
                 .doctorId(Long.parseLong(req.getParameter("doctorId")))
                 .startWork(LocalTime.parse(req.getParameter("startWork")))
                 .endWork(LocalTime.parse(req.getParameter("endWork")))
                 .maxAppointmentCount(Integer.parseInt(req.getParameter("maxAppointmentCount")))
-                .id(Long.parseLong(req.getParameter("id")))
-                .createdAt(Timestamp.valueOf(req.getParameter("createdAt")))
-                .updatedAt(Timestamp.valueOf(req.getParameter("updatedAt")))
                 .build();
+        try {
+            entity.setId(Long.parseLong(req.getParameter("id")));
+            entity.setCreatedAt(Timestamp.valueOf(req.getParameter("createdAt")));
+            entity.setUpdatedAt(Timestamp.valueOf(req.getParameter("updatedAt")));
+        } catch (Exception ignored) {
+        }
+        return entity;
     }
 }

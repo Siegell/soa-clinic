@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserDeleteActionImpl implements Action {
+public class UserDeleteActionImpl extends Action {
     private UserService userService;
+
+    {
+        permissions = "admin";
+    }
 
     public void setUserService(UserService userService) {
         this.userService = userService;

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class LogoutActionImpl implements Action {
+public class LogoutActionImpl extends Action {
     private UserService userService;
 
     public void setUserService(UserService userService) {
@@ -19,6 +19,6 @@ public class LogoutActionImpl implements Action {
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getSession().removeAttribute("userId");
-        return new ActionResult("/index.html");
+        return new ActionResult("/");
     }
 }

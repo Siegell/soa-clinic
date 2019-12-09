@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DoctorDeleteActionImpl implements Action {
+public class DoctorDeleteActionImpl extends Action {
     private DoctorService doctorService;
+
+    {
+        permissions = "admin|nurse";
+    }
 
     public void setDoctorService(DoctorService doctorService) {
         this.doctorService = doctorService;

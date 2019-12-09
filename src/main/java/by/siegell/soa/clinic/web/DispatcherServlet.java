@@ -32,7 +32,7 @@ public class DispatcherServlet extends HttpServlet {
         try(IoCContainer ioc = new IoCContainer()) {
             Action action = ioc.get(Action.class, url);
             if(action != null) {
-                actionResult = action.exec(req, resp);
+                actionResult = action.execWithPermissionCheck(req, resp);
             }
         } catch(IoCException e) {
             throw new ServletException(e);

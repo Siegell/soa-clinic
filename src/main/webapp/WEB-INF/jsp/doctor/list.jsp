@@ -43,4 +43,11 @@
     </c:choose>
     <c:url var="editUrl" value="/doctor/edit.html"/>
     <p><a href="${editUrl}">Добавить нового доктора</a></p>
+
+    <c:url var="logout" value="/logout.html"/>
+    <p><a href="${logout}">logout</a></p>
+
+    <c:url var="doctorList" value="/user/list.html"/>
+    <td><a href="${doctorList}">Управление пользователями</a></td>
+
 </u:html>

@@ -38,4 +38,7 @@
         <c:param name="doctorScheduleId" value="${doctorScheduleId}"/>
     </c:url>
     <p><a href="${editUrl}">Добавить новый талон</a></p>
+    <c:url var="logout" value="/logout.html"/>
+    <p><a href="${logout}">logout</a></p>
+
 </u:html>

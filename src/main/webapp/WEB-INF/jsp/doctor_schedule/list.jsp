@@ -37,6 +37,11 @@
             <p>Расписание доктора пусто</p>
         </c:otherwise>
     </c:choose>
-    <c:url var="editUrl" value="/doctor_schedule/edit.html"/>
+    <c:url var="editUrl" value="/doctor_schedule/edit.html">
+        <c:param name="doctorId" value="${doctorId}"/>
+    </c:url>
     <p><a href="${editUrl}">Добавить расписание</a></p>
+    <c:url var="logout" value="/logout.html"/>
+    <p><a href="${logout}">logout</a></p>
+
 </u:html>

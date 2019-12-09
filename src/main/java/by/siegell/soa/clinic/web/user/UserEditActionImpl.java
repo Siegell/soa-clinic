@@ -10,11 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class UserEditActionImpl implements Action {
+public class UserEditActionImpl extends Action {
     private UserService userService;
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    {
+        permissions = "admin";
     }
 
     @Override

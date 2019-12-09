@@ -40,4 +40,7 @@
             <button>Удалить</button>
         </form>
     </c:if>
+    <c:url var="logout" value="/logout.html"/>
+    <p><a href="${logout}">logout</a></p>
+
 </u:html>

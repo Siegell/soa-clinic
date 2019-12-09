@@ -9,8 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AppointmentDeleteActionImpl implements Action {
+public class AppointmentDeleteActionImpl extends Action {
     private AppointmentService appointmentService;
+
+    {
+        permissions = "admin|nurse";
+    }
 
     @Override
     public ActionResult exec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -18,7 +22,8 @@ public class AppointmentDeleteActionImpl implements Action {
         try {
             id = Long.parseLong(req.getParameter("id"));
             appointmentService.delete(id);
-        } catch (NumberFormatException ignored) {};
+        } catch (NumberFormatException ignored) {
+        }
         return new ActionResult("/appointment/list.html");
     }
 

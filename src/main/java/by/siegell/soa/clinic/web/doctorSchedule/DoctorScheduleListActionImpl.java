@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class DoctorScheduleListActionImpl implements Action {
+public class DoctorScheduleListActionImpl extends Action {
     private DoctorScheduleService doctorScheduleService;
 
     public void setDoctorScheduleService(DoctorScheduleService doctorScheduleService) {
@@ -28,6 +28,7 @@ public class DoctorScheduleListActionImpl implements Action {
                 .filter(doctorSchedule -> Objects.equals(doctorSchedule.getDoctorId(), doctorId))
                 .collect(Collectors.toList());
         req.setAttribute("doctorSchedules", doctorSchedules);
+        req.setAttribute("doctorId", doctorId);
         return null;
     }
 }

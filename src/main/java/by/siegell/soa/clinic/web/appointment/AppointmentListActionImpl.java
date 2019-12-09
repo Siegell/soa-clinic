@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AppointmentListActionImpl implements Action {
+public class AppointmentListActionImpl extends Action {
     private AppointmentService appointmentService;
 
     @Override
@@ -24,6 +24,7 @@ public class AppointmentListActionImpl implements Action {
                 .filter(appointment -> appointment.getDoctorScheduleId() == doctorScheduleId)
                 .collect(Collectors.toList());
         req.setAttribute("appointments", appointments);
+        req.setAttribute("doctorScheduleId", doctorScheduleId);
         return null;
     }
 

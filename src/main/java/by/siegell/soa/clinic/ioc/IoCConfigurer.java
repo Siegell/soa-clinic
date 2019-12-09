@@ -11,7 +11,7 @@ public class IoCConfigurer {
         IoCContainer.registerFactory("by.siegell.soa.clinic.web.Action", "by.siegell.soa.clinic.web.ActionFactory");
 
         //doctor
-        Map<String, String> doctorActionsDependencies = map(pair("by.siegell.soa.clinic.service.DoctorService", "setDoctorService"));
+        Map<String, String> doctorActionsDependencies = map(pair("by.siegell.soa.clinic.service.DoctorService", "setDoctorService"), pair("by.siegell.soa.clinic.util.PermissionHelper", "setPermissionHelper"));
         ActionFactory.registerAction("/doctor/list", "by.siegell.soa.clinic.web.doctor.DoctorListActionImpl");
         DIContainer.registerClass("by.siegell.soa.clinic.web.doctor.DoctorListActionImpl", doctorActionsDependencies);
         ActionFactory.registerAction("/doctor/edit", "by.siegell.soa.clinic.web.doctor.DoctorEditActionImpl");
@@ -22,7 +22,7 @@ public class IoCConfigurer {
         DIContainer.registerClass("by.siegell.soa.clinic.web.doctor.DoctorDeleteActionImpl", doctorActionsDependencies);
 
         //doctorSchedule
-        Map<String, String> doctorScheduleActionsDependencies = map(pair("by.siegell.soa.clinic.service.DoctorScheduleService", "setDoctorScheduleService"));
+        Map<String, String> doctorScheduleActionsDependencies = map(pair("by.siegell.soa.clinic.service.DoctorScheduleService", "setDoctorScheduleService"), pair("by.siegell.soa.clinic.util.PermissionHelper", "setPermissionHelper"));
         ActionFactory.registerAction("/doctor_schedule/list", "by.siegell.soa.clinic.web.doctorSchedule.DoctorScheduleListActionImpl");
         DIContainer.registerClass("by.siegell.soa.clinic.web.doctorSchedule.DoctorScheduleListActionImpl", doctorScheduleActionsDependencies);
         ActionFactory.registerAction("/doctor_schedule/edit", "by.siegell.soa.clinic.web.doctorSchedule.DoctorScheduleEditActionImpl");
@@ -33,7 +33,7 @@ public class IoCConfigurer {
         DIContainer.registerClass("by.siegell.soa.clinic.web.doctorSchedule.DoctorScheduleDeleteActionImpl", doctorScheduleActionsDependencies);
 
         //appointment
-        Map<String, String> appointmentActionsDependencies = map(pair("by.siegell.soa.clinic.service.AppointmentService", "setAppointmentService"));
+        Map<String, String> appointmentActionsDependencies = map(pair("by.siegell.soa.clinic.service.AppointmentService", "setAppointmentService"), pair("by.siegell.soa.clinic.util.PermissionHelper", "setPermissionHelper"));
         ActionFactory.registerAction("/appointment/list", "by.siegell.soa.clinic.web.appointment.AppointmentListActionImpl");
         DIContainer.registerClass("by.siegell.soa.clinic.web.appointment.AppointmentListActionImpl", appointmentActionsDependencies);
         ActionFactory.registerAction("/appointment/edit", "by.siegell.soa.clinic.web.appointment.AppointmentEditActionImpl");
@@ -44,7 +44,7 @@ public class IoCConfigurer {
         DIContainer.registerClass("by.siegell.soa.clinic.web.appointment.AppointmentDeleteActionImpl", appointmentActionsDependencies);
 
         //user
-        Map<String, String> userActionsDependencies = map(pair("by.siegell.soa.clinic.service.UserService", "setUserService"));
+        Map<String, String> userActionsDependencies = map(pair("by.siegell.soa.clinic.service.UserService", "setUserService"), pair("by.siegell.soa.clinic.util.PermissionHelper", "setPermissionHelper"));
         ActionFactory.registerAction("/user/list", "by.siegell.soa.clinic.web.user.UserListActionImpl");
         DIContainer.registerClass("by.siegell.soa.clinic.web.user.UserListActionImpl", userActionsDependencies);
         ActionFactory.registerAction("/user/edit", "by.siegell.soa.clinic.web.user.UserEditActionImpl");

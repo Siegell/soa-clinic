@@ -32,4 +32,5 @@ VALUES (1, '08:05:00-07', '08:15:00-07', 'Шалаганова', 'Аза', 'Ге
         '2019-09-28 19:10:25-07');
 
 INSERT INTO "user" (username, password, roles)
-VALUES ('admin', 'admin', 'admin');
+VALUES ('admin', 'admin', 'admin'),
+       ('nurse', 'nurse', 'nurse');

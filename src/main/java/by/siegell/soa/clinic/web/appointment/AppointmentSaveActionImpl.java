@@ -13,12 +13,16 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalTime;
 
-public class AppointmentSaveActionImpl implements Action {
+public class AppointmentSaveActionImpl extends Action {
 
     private AppointmentService appointmentService;
 
     public void setAppointmentService(AppointmentService appointmentService) {
         this.appointmentService = appointmentService;
+    }
+
+    {
+        permissions = "admin|nurse";
     }
 
     @Override
