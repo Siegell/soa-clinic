@@ -37,6 +37,9 @@ public class UserDaoImpl extends BaseDaoMySqlImpl implements UserDao {
             s.setString(1, entity.getUsername());
             s.setString(2, entity.getPassword());
             s.setString(3, entity.getRoles());
+            if (update) {
+                s.setLong(4, entity.getId());
+            }
             s.executeUpdate();
             c.commit();
         } catch (Exception e) {
