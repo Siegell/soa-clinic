@@ -5,11 +5,11 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="u"%>
 
 <c:choose>
-    <c:when test="${not empty doctor}">
-        <c:set var="title" value="Редактирование доктора ${doctor.firstName} ${doctor.lastName}"/>
+    <c:when test="${not empty doctor.id}">
+        <c:set var="title" value="Editing doctor ${doctor.firstName} ${doctor.lastName}"/>
     </c:when>
     <c:otherwise>
-        <c:set var="title" value="Добавление нового доктора"/>
+        <c:set var="title" value="Adding new doctor"/>
         <jsp:useBean id="doctor" class="by.siegell.soa.clinic.domain.Doctor"/>
     </c:otherwise>
 </c:choose>
@@ -22,28 +22,43 @@
             <input type="hidden" name="createdAt" value="${doctor.createdAt}">
             <input type="hidden" name="updatedAt" value="${doctor.updatedAt}">
         </c:if>
-        <label for="first-name">Имя:</label><br>
-        <input id="first-name" name="firstName" value="${doctor.firstName}"><br>
-        <label for="last-name">Фамилия:</label><br>
-        <input id="last-name" name="lastName" value="${doctor.lastName}"><br>
-        <label for="last-name">Отчество:</label><br>
-        <input id="middle-name" name="middleName" value="${doctor.middleName}"><br>
-        <label for="last-name">Специальность:</label><br>
-        <input id="specialization" name="specialization" value="${doctor.specialization}"><br>
-        <label for="last-name">Участок:</label><br>
-        <input id="district" name="district" value="${doctor.district}"><br>
-        <label for="last-name">Кабинет:</label><br>
-        <input id="cabinet" name="cabinet" value="${doctor.cabinet}"><br>
-        <button>Сохранить</button>
+        <div class="form-group">
+            <label for="first-name">First name:</label>
+            <input id="first-name" name="firstName" value="${doctor.firstName}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="last-name">Last name:</label>
+            <input id="last-name" name="lastName" value="${doctor.lastName}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="middle-name">Middle name:</label>
+            <input id="middle-name" name="middleName" value="${doctor.middleName}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="specialization">Specialty:</label>
+            <input id="specialization" name="specialization" value="${doctor.specialization}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="district">Plot:</label>
+            <input id="district" name="district" value="${doctor.district}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="cabinet">Cabinet:</label>
+            <input id="cabinet" name="cabinet" value="${doctor.cabinet}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
+
     <c:if test="${not empty doctor.id}">
         <c:url var="deleteUrl" value="/doctor/delete.html"/>
-        <form action="${deleteUrl}" method="post">
+        <form action="${deleteUrl}" method="post" class="mt-2">
             <input type="hidden" name="id" value="${doctor.id}">
-            <button>Удалить</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
         </form>
     </c:if>
-    <c:url var="logout" value="/logout.html"/>
-    <p><a href="${logout}">logout</a></p>
 
+    <c:url var="logout" value="/logout.html"/>
+    <div class="mt-2">
+        <a class="btn btn-primary" href="${logout}">Logout</a>
+    </div>
 </u:html>

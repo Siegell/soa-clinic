@@ -6,10 +6,10 @@
 
 <c:choose>
     <c:when test="${not empty user}">
-        <c:set var="title" value="Редактирование пользователя"/>
+        <c:set var="title" value="Editing user"/>
     </c:when>
     <c:otherwise>
-        <c:set var="title" value="Добавление нового пользователя"/>
+        <c:set var="title" value="Adding new user"/>
         <jsp:useBean id="user" class="by.siegell.soa.clinic.domain.User"/>
     </c:otherwise>
 </c:choose>
@@ -20,22 +20,31 @@
         <c:if test="${not empty user.id}">
             <input type="hidden" name="id" value="${user.id}">
         </c:if>
-        <label for="username">Имя пользователя:</label><br>
-        <input id="username" name="username" value="${user.username}"><br>
-        <label for="password">Пароль:</label><br>
-        <input id="password" name="password" value="${user.password}"><br>
-        <label for="roles">Роли(без пробелов через |, пример: admin|nurse):</label><br>
-        <input id="roles" name="roles" value="${user.roles}"><br>
-        <button>Сохранить</button>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input id="username" name="username" value="${user.username}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input id="password" name="password" value="${user.password}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="roles">Roles (example: admin|nurse):</label>
+            <input id="roles" name="roles" value="${user.roles}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
     <c:if test="${not empty user.id}">
         <c:url var="deleteUrl" value="/user/delete.html"/>
         <form action="${deleteUrl}" method="post">
             <input type="hidden" name="id" value="${user.id}">
-            <button>Удалить</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
         </form>
     </c:if>
+
     <c:url var="logout" value="/logout.html"/>
-    <p><a href="${logout}">logout</a></p>
+    <div class="mt-2">
+        <a class="btn btn-primary" href="${logout}">Logout</a>
+    </div>
 
 </u:html>

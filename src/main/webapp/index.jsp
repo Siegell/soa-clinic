@@ -4,15 +4,19 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@taglib tagdir="/WEB-INF/tags" prefix="u" %>
 
-<u:html title="${Клиника}">
+<u:html title="Clinic">
   <c:url var="loginUrl" value="/login.html"/>
   <form action="${loginUrl}" method="post">
-    <label for="username">Username:</label><br>
-    <input id="username" name="username"><br>
-    <label for="password">Password:</label><br>
-    <input id="password" name="password"><br>
-    <button>Вход в систему</button>
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input id="username" name="username" class="form-control">
+    </div>
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input id="password" type="password" name="password" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
   </form>
   <c:url var="doctorList" value="/doctor/list.html"/>
-  <td><a href="${doctorList}">Продолжить без входа</a></td>
+  <a class="mt-2" href="${doctorList}">Continue without login</a>
 </u:html>

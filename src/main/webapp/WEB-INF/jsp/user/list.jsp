@@ -3,16 +3,19 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="u"%>
 
-<u:html title="Список пользователей">
+<u:html title="Users list">
     <c:choose>
         <c:when test="${not empty users}">
-            <table border="1">
-                <tr>
-                    <th>username</th>
-                    <th>password</th>
-                    <th>roles</th>
-                    <td></td>
-                </tr>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Roles</th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
                 <c:forEach var="user" items="${users}">
                     <c:url var="editUrl" value="/user/edit.html">
                         <c:param name="id" value="${user.id}"/>
@@ -22,18 +25,23 @@
                         <td>${user.password}</td>
                         <td>${user.roles}</td>
 
-                        <td><a href="${editUrl}">редактировать</a></td>
+                        <td><a href="${editUrl}">edit</a></td>
                     </tr>
                 </c:forEach>
+                </tbody>
             </table>
         </c:when>
         <c:otherwise>
-            <p>Список пользователей пустой</p>
+            <p>Users list is empty</p>
         </c:otherwise>
     </c:choose>
+
     <c:url var="editUrl" value="/user/edit.html"/>
-    <p><a href="${editUrl}">Добавить нового пользователя</a></p>
+    <p><a href="${editUrl}">Add user</a></p>
+
     <c:url var="logout" value="/logout.html"/>
-    <p><a href="${logout}">logout</a></p>
+    <div class="mt-2">
+        <a class="btn btn-primary" href="${logout}">Logout</a>
+    </div>
 
 </u:html>

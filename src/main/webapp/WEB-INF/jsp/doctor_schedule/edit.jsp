@@ -5,12 +5,11 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="u"%>
 
 <c:choose>
-    <c:when test="${not empty doctorSchedule}">
-        <c:set var="title" value="Редактирование расписания"/>
+    <c:when test="${not empty doctorSchedule.id}">
+        <c:set var="title" value="Editing schedule"/>
     </c:when>
     <c:otherwise>
-        <c:set var="title" value="Добавление нового расписания"/>
-        <jsp:useBean id="doctorSchedule" class="by.siegell.soa.clinic.domain.DoctorSchedule"/>
+        <c:set var="title" value="Adding new schedule"/>
     </c:otherwise>
 </c:choose>
 
@@ -22,27 +21,37 @@
             <input type="hidden" name="createdAt" value="${doctorSchedule.createdAt}">
             <input type="hidden" name="updatedAt" value="${doctorSchedule.updatedAt}">
         </c:if>
-        <label for="date">Дата:</label><br>
-        <input id="date" name="date" value="${doctorSchedule.date}"><br>
-        <label for="startWork">Начало работы:</label><br>
-        <input id="startWork" name="startWork" value="${doctorSchedule.startWork}"><br>
-        <label for="endWork">Конец работы:</label><br>
-        <input id="endWork" name="endWork" value="${doctorSchedule.endWork}"><br>
-        <label for="maxAppointmentCount">Количество талонов на приём:</label><br>
-        <input id="maxAppointmentCount" name="maxAppointmentCount" value="${doctorSchedule.maxAppointmentCount}"><br>
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <input id="date" name="date" type="date" value="${doctorSchedule.date}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="startWork">Start work:</label>
+            <input id="startWork" name="startWork" type="time" value="${doctorSchedule.startWork}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="endWork">End work:</label>
+            <input id="endWork" name="endWork" type="time" value="${doctorSchedule.endWork}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="maxAppointmentCount">Appointments amount:</label>
+            <input id="maxAppointmentCount" name="maxAppointmentCount" value="${doctorSchedule.maxAppointmentCount}" class="form-control">
+        </div>
         <input type="hidden" name="doctorId" value="${doctorSchedule.doctorId}">
-        <button>Сохранить</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
     <c:if test="${not empty doctorSchedule.id}">
         <c:url var="deleteUrl" value="/doctor_schedule/delete.html">
             <c:param name="doctorId" value="${doctorSchedule.doctorId}"/>
         </c:url>
-        <form action="${deleteUrl}" method="post">
+        <form action="${deleteUrl}" method="post" class="mt-2">
             <input type="hidden" name="id" value="${doctorSchedule.id}">
-            <button>Удалить</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
         </form>
     </c:if>
     <c:url var="logout" value="/logout.html"/>
-    <p><a href="${logout}">logout</a></p>
+    <div class="mt-2">
+        <a class="btn btn-primary" href="${logout}">Logout</a>
+    </div>
 
 </u:html>

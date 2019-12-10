@@ -3,7 +3,7 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib tagdir="/WEB-INF/tags" prefix="u"%>
 
-<u:html title="Ошибка">
+<u:html title="Error">
     <c:choose>
         <c:when test="${not empty message}">
             <p style="color: red;">${message}</p>

@@ -5,12 +5,11 @@
 <%@taglib tagdir="/WEB-INF/tags" prefix="u"%>
 
 <c:choose>
-    <c:when test="${not empty appointment}">
-        <c:set var="title" value="Редактирование талона"/>
+    <c:when test="${not empty appointment.id}">
+        <c:set var="title" value="Editing appointment"/>
     </c:when>
     <c:otherwise>
-        <c:set var="title" value="Добавление нового талона"/>
-        <jsp:useBean id="appointment" class="by.siegell.soa.clinic.domain.Appointment"/>
+        <c:set var="title" value="Adding new appointment"/>
     </c:otherwise>
 </c:choose>
 
@@ -22,28 +21,42 @@
             <input type="hidden" name="createdAt" value="${appointment.createdAt}">
             <input type="hidden" name="updatedAt" value="${appointment.updatedAt}">
         </c:if>
-        <label for="startTime">Начало приёма:</label><br>
-        <input id="startTime" name="startTime" value="${appointment.startTime}"><br>
-        <label for="endTime">Конец приёма:</label><br>
-        <input id="endTime" name="endTime" value="${appointment.endTime}"><br>
-        <label for="first-name">Имя:</label><br>
-        <input id="first-name" name="firstName" value="${appointment.firstName}"><br>
-        <label for="last-name">Фамилия:</label><br>
-        <input id="last-name" name="lastName" value="${appointment.lastName}"><br>
-        <label for="last-name">Отчество:</label><br>
-        <input id="middle-name" name="middleName" value="${appointment.middleName}"><br>
+        <div class="form-group">
+            <label for="startTime">Start time:</label>
+            <input id="startTime" name="startTime" type="time" value="${appointment.startTime}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="endTime">End time:</label>
+            <input id="endTime" name="endTime" type="time" value="${appointment.endTime}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="first-name">Last name:</label>
+            <input id="first-name" name="firstName" value="${appointment.firstName}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="last-name">First name:</label>
+            <input id="last-name" name="lastName" value="${appointment.lastName}" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="middle-name">Middle name:</label>
+            <input id="middle-name" name="middleName" value="${appointment.middleName}" class="form-control">
+        </div>
         <input type="hidden" name="doctorScheduleId" value="${appointment.doctorScheduleId}">
-        <button>Сохранить</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
+
     <c:if test="${not empty appointment.id}">
         <c:url var="deleteUrl" value="/appointment/delete.html">
             <c:param name="doctorScheduleId" value="${appointment.doctorScheduleId}"/>
         </c:url>
-        <form action="${deleteUrl}" method="post">
+        <form action="${deleteUrl}" method="post" class="mt-2">
             <input type="hidden" name="id" value="${appointment.id}">
-            <button>Удалить</button>
+            <button type="submit" class="btn btn-primary">Delete</button>
         </form>
     </c:if>
+
     <c:url var="logout" value="/logout.html"/>
-    <p><a href="${logout}">logout</a></p>
+    <div class="mt-2">
+        <a class="btn btn-primary" href="${logout}">Logout</a>
+    </div>
 </u:html>
